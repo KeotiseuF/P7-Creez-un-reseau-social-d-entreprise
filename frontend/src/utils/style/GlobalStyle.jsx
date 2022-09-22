@@ -1,5 +1,5 @@
 import { createGlobalStyle } from "styled-components";
-
+import colors from "./colors";
 const StyledGlobalStyle = createGlobalStyle`
     *
     {
@@ -8,7 +8,8 @@ const StyledGlobalStyle = createGlobalStyle`
 
     body
     {
-        font-family: "Lato";
+        font-family: "Lato";        
+        background-color: ${colors.secondary};
     }
 `;
 

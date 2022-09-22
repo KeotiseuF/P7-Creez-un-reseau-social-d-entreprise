@@ -3,18 +3,18 @@ import ReactDOM from "react-dom/client"; // API qui est responsable de générer
 import GlobalStyle from "./utils/style/GlobalStyle";
 import Home from "./pages/Home";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Register from "./pages/Register";
 import Connect from "./pages/Connect";
-
+import CreatePost from "./pages/CreatePost";
+import PrivateRoutes from "./utils/hooks";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <BrowserRouter>
     <GlobalStyle />
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/connect" element={<Connect />} />
+      <Route path="/" element={<Connect />} />
+      <Route path="/accueil" element={<Home />} />
+      <Route path="accueil/create_post" element={<CreatePost />} />
     </Routes>
   </BrowserRouter>
 );

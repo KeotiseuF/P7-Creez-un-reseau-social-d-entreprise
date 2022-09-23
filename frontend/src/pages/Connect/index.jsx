@@ -1,6 +1,23 @@
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import Loader from "../../components/Loader";
+import {
+  StyledConnect,
+  StyledHeader,
+  StyledForm,
+  StyledFrame,
+  StyledLabel,
+  StyledInput,
+  StyledGroupo,
+  StyledOneSubmit,
+  StyledSubmits,
+  StyledPrimaryTitle,
+  StyledSecondaryTitle,
+  StyledError,
+  StyledButton,
+  StyledListing,
+  StyledLastBlock,
+} from "../../utils/style/Connect";
 
 function Connect() {
   const {
@@ -13,6 +30,30 @@ function Connect() {
   const watchPassword = watch(["password", "confirm_password"]);
   const validPassword = watchPassword[0] === watchPassword[1];
   const [loader, setLoader] = useState(true);
+  const [displayPassword, setDisplayPassword] = useState(false);
+  const [password, setPassword] = useState("");
+  const oneUppercaseLetter = /[A-Z]/.test(password);
+  const oneLowercaseLetter = /[a-z]/.test(password);
+  const oneNumber = /[0-9]/.test(password);
+  const oneSpecialCharacter = /[*.!@#$%^&(){}[]:;]/.test(password);
+  const lengthPassword = password.length >= 12;
+
+
+  const testRegister = (e) => {
+    const displayBlock = document.getElementById("frame_confirm_password");
+    const addTrue = document.getElementById("confirm_password");
+    displayBlock.style.display = "flex";
+    addTrue.setAttribute("required", true)
+    console.log(addTrue)
+  };
+
+  const testConnect = () => {
+    const displayBlock = document.getElementById("frame_confirm_password");
+    displayBlock.style.display = "none";
+    const addTrue = document.getElementById("confirm_password");
+    addTrue.removeAttribute("required")
+    console.log(addTrue)
+  };
 
   const onSubmit = (data) => {
     fetch("http://localhost:4200/api/auth/login", {
@@ -44,72 +85,96 @@ function Connect() {
   return loader ? (
     <Loader />
   ) : (
-    <div>
-      <header>
-        <h1>Groupomania Network</h1>
-        <h2>Bienvenue, on vous attendez !</h2>
-      </header>
+    <StyledConnect>
+    <StyledHeader>
+      <StyledPrimaryTitle>
+        <StyledGroupo>Groupomania</StyledGroupo> Network
+      </StyledPrimaryTitle>
+      <StyledSecondaryTitle>
+        Bienvenue, on vous attendez !
+      </StyledSecondaryTitle>
+    </StyledHeader>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="frame_email">
-          <label htmlFor="email">Email: </label>
-          <input
+      <StyledForm  onSubmit={handleSubmit(onSubmit)}>
+        <StyledFrame id="frame_email">
+          <StyledLabel htmlFor="email">Email : </StyledLabel>
+          <StyledInput
             id="email"
             type="email"
             {...register("email", {
               pattern: {
                 value:
                   /^[A-Za-z][-a-z0-9._]+[-a-z0-9]@[-a-z0-9]+[.]{1}[a-z]{2,5}$/,
-                message: "Email n'est pas valide",
+                message: "● Email n'est pas valide",
               },
               required: true,
             })}
           />
-        </div>
-        <p>{errors.email?.message}</p>
-        <div className="frame_password">
-          <label htmlFor="password">Mot de passe: </label>
-          <input
+        </StyledFrame>
+        <StyledError>{errors.email?.message}</StyledError>
+        
+        <StyledFrame id="frame_password">
+          <StyledLabel htmlFor="password">Mot de passe : </StyledLabel>
+          <StyledInput
             id="password"
-            type="password"
+            type={displayPassword ? "text" : "password"}
             {...register("password", {
               pattern: {
                 value:
-                  /^(?=.{12,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/,
-                message:
-                  "Doit contenir au moins 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial et une longueur d'au moins 12",
+                  /^(?=.{12,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/
               },
               required: true,
             })}
+            onChange={(e) => setPassword(e.target.value)}
           />
-        </div>
+          <StyledButton onClick={() => setDisplayPassword(!displayPassword)}>
+            {displayPassword ? "Cacher" : "Afficher"}
+          </StyledButton>
+        </StyledFrame>
 
-        <p>{errors.password?.message}</p>
+        {password && (
+          <StyledListing>
+            {oneUppercaseLetter ? null : <li>Doit contenir 1 majuscule</li>}
+            {oneLowercaseLetter ? null : <li>1 minuscule</li>}
+            {oneNumber ? null : <li>1 chiffre</li>}
+            {oneSpecialCharacter ? null : <li>1 caractère spécial</li>}
+            {lengthPassword ? null : <li>Une longueur d'au moins 12</li>}
+          </StyledListing>
+        )}
 
-        <div className="frame_confirm_password">
-          <label htmlFor="confirm_password">Confirme mot de passe: </label>
-          <input
+        <StyledFrame id="frame_confirm_password" style={{ display: "none" }}>
+          <StyledLabel htmlFor="confirm_password">Confirme mot de passe : </StyledLabel>
+          <StyledInput
             id="confirm_password"
-            type="password"
+            type={displayPassword ? "text" : "password"}
             {...register("confirm_password", {
               pattern: {
                 value:
                   /^(?=.{12,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/,
-                message: "Mot de passe non similaire",
-              },
-              required: true,
+                  message: "● Mot de passe non similaire",
+              }
             })}
           />
-        </div>
+          <StyledButton onClick={() => setDisplayPassword(!displayPassword)}>
+            {displayPassword ? "Cacher" : "Afficher"}
+          </StyledButton>
+        </StyledFrame>
 
-        {validPassword ? null : <p>{errors.confirm_password?.message}</p>}
+        {validPassword ? null : <StyledError>{errors.confirm_password?.message}</StyledError>}
 
-        <div className="valid_form">
-          <input value="Connexion" className="connection" type="submit" />
-          <input value="Inscription" className="register" type="submit" />
-        </div>
-      </form>
-    </div>
+        <StyledSubmits className="valid_form">
+          <StyledOneSubmit value="Connexion" className="connection" type="submit" onClick={testConnect} />
+          <StyledOneSubmit value="Inscription" className="register" type="submit" onClick={testRegister} />
+        </StyledSubmits>
+      </StyledForm >
+      <StyledLastBlock>
+        <input type="button" value="Mot de passe oublié ?" />
+        <p>
+          <input type="checkbox" id="cgv" />
+          J'accepte les CGU.
+        </p>
+      </StyledLastBlock>
+    </StyledConnect>
   );
 }
 

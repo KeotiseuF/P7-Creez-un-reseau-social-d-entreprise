@@ -11,11 +11,12 @@ function CreatePost() {
 
   const onSubmit = (data) => {
     const token = localStorage.getItem("token");
+    const to = token.replace(/"/g, " ")
     fetch(`http://localhost:4200/api/posts/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${to}`,
       },
       body: JSON.stringify(data),
     })
@@ -28,17 +29,13 @@ function CreatePost() {
       .catch((error) => {
         console.error("Error:", error);
       });
-    console.log(data.error);
   };
 
   /*function fileValidation() {
     var fileInput = document.getElementById("image");
-
     var filePath = fileInput.value;
-
     // Allowing file type
     var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
-
     if (!allowedExtensions.exec(filePath)) {
       alert("Invalid file type");
       fileInput.value = "";
@@ -51,7 +48,6 @@ function CreatePost() {
           document.getElementById("imagePreview").innerHTML =
             '<img src="' + e.target.result + '"/>';
         };
-
         reader.readAsDataURL(fileInput.files[0]);
       }
     }

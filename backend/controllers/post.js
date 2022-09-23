@@ -90,7 +90,7 @@ exports.getOnePost = (req, res, next) => {
     .catch((error) => res.status(404).json({ error }));
 };
 
-// Renvoi tous les posts.
+// Renvoi toutes les posts.
 exports.getAllPosts = (req, res, next) => {
   Post.find()
     .then((posts) => res.status(200).json(posts))

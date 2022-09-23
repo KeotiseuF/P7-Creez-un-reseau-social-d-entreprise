@@ -9,7 +9,7 @@ const MY_APP_SECRET = process.env.APP_SECRET; // Variable d'environnement qui co
 // Permet à un utilisateur de s'inscrire.
 exports.signup = (req, res, next) => {
   bcrypt
-    .hash(req.body.password, 10) // Demande de « saler » le mot de passe 10 fois.
+    .hash(req.body.password, 10) // Demande de « saler » le mot de passe 10 fois.
     .then((hash) => {
       const user = new User({
         email: req.body.email,

@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken"); // Importe "jsonwebtoken" pour utiliser sa fonction "verify" qui permettra de décoder notre token, voir s'il est valide.
+const jwt = require("jsonwebtoken"); // Importe "jsonwebtoken" pour utiliser sa fonction "verify" qui permettra de décoder notre token, voir s'il est valide.
 const dotenv = require("dotenv"); // Importe les variables d'environnement.
 dotenv.config();
 const MY_APP_SECRET = process.env.APP_SECRET;

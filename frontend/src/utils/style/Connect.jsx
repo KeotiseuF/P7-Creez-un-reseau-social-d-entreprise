@@ -33,7 +33,7 @@ export const StyledGroupo = styled.span`
 export const StyledForm = styled.form`
   margin-top: 50px;
   background: #fc466b;
-  border-radius: 50px;
+  border-radius: 50px 50px 0px 0px;
   box-shadow: 13px 11px 28px 0px rgb(169 89 151 / 69%);
   width: 285px;
 `;
@@ -50,7 +50,7 @@ export const StyledLabel = styled.label`
   margin: 20px 0px 15px;
 `;
 
-export const StyledInputs = styled.input`
+export const StyledInput = styled.input`
   border-radius: 10px;
   width: 225px;
 `;
@@ -82,4 +82,16 @@ export const StyledButton = styled.button`
 
 export const StyledListing = styled.ul`
   font-size: large;
+`;
+
+export const StyledLastBlock = styled.div`
+  background: #fc466b;
+  border-radius: 0px 0px 50px 50px;
+  box-shadow: 13px 11px 28px 0px rgb(169 89 151 / 69%);
+  width: 285px;
+  position: relative;
+  top: -2px;
+  display: flex; 
+  flex-direction: column;
+  align-items: center;
 `;

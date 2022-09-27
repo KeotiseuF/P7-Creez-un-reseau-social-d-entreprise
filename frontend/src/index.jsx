@@ -5,7 +5,6 @@ import Home from "./pages/Home";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Connect from "./pages/Connect";
 import CreatePost from "./pages/CreatePost";
-import PrivateRoutes from "./utils/hooks";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(

@@ -10,23 +10,22 @@ function CreatePost() {
   } = useForm({ mode: "onTouched" });
 
   const onSubmit = (data) => {
-    const token = localStorage.getItem("token");
-    const to = token.replace(/"/g, " ")
-    fetch(`http://localhost:4200/api/posts/`, {
+    const token = JSON.parse(localStorage.getItem("token"));
+    const post = new FormData()
+      
+    post.append("post", JSON.stringify({"postMessage": data.postMessage}))
+    post.append("image", data.imageUrl[0])
+  
+    fetch("http://localhost:4200/api/posts", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${to}`,
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        data.error !== undefined
-          ? data && console.log(data) && alert("Post ajouté !")
-          : alert("Veuillez vérifier vos données");
-      })
-      .catch((error) => {
+      body: post,
+      }).then((response) => {
+        response.json()}).then(() => {
+          alert("Post ajouté !")
+      }).catch((error) => {
         console.error("Error:", error);
       });
   };
@@ -62,11 +61,12 @@ function CreatePost() {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="frame_commentaire">
-          <label htmlFor="commentaire">Commentaire :</label>
+          <label htmlFor="postMessage">Commentaire :</label>
           <input
-            id="commentaire"
+            name="postMessage"
+            id="postMessage"
             type="text"
-            {...register("commentaire", { required: true })}
+            {...register("postMessage", { required: true })}
           />
         </div>
 
@@ -74,9 +74,10 @@ function CreatePost() {
           <label htmlFor="image">Veuillez insérer une image:</label>
           <input
             id="image"
+            name="image"
             type="file"
             accept="image/png, image/jpeg, image/jpg,"
-            {...register("image")}
+            {...register("imageUrl")}
           />
         </div>
 

@@ -39,12 +39,11 @@ function Connect() {
   const lengthPassword = password.length >= 12;
 
 
-  const testRegister = (e) => {
+  const testRegister = () => {
     const displayBlock = document.getElementById("frame_confirm_password");
     const addTrue = document.getElementById("confirm_password");
     displayBlock.style.display = "flex";
     addTrue.setAttribute("required", true)
-    console.log(addTrue)
   };
 
   const testConnect = () => {
@@ -52,7 +51,6 @@ function Connect() {
     displayBlock.style.display = "none";
     const addTrue = document.getElementById("confirm_password");
     addTrue.removeAttribute("required")
-    console.log(addTrue)
   };
 
   const onSubmit = (data) => {

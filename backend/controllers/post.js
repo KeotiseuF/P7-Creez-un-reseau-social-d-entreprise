@@ -11,10 +11,9 @@ exports.newPost = (req, res, next) => {
     userId: req.auth.userId,
     imageUrl: `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
-    }`, // Créé un path (chemin/route) pour l'image que j'ajoute pour mon post.
+    }`,  // Créé un path (chemin/route) pour l'image que j'ajoute pour mon post.
   });
-  post
-    .save()
+  post.save()
     .then(() => res.status(201).json({ message: "Post enregistré" }))
     .catch((error) => res.status(400).json({ error }));
 };

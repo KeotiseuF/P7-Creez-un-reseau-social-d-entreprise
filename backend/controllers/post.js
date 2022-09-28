@@ -11,9 +11,10 @@ exports.newPost = (req, res, next) => {
     userId: req.auth.userId,
     imageUrl: `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
-    }`,  // Créé un path (chemin/route) pour l'image que j'ajoute pour mon post.
+    }`, // Créé un path (chemin/route) pour l'image que j'ajoute pour mon post.
   });
-  post.save()
+  post
+    .save()
     .then(() => res.status(201).json({ message: "Post enregistré" }))
     .catch((error) => res.status(400).json({ error }));
 };
@@ -98,7 +99,7 @@ exports.getAllPosts = (req, res, next) => {
 
 // Permet d'aimer un post.
 exports.likePost = (req, res, next) => {
-  if (req.body.post === 1) {
+  if (req.body.like === 1) {
     delete req.body._userId;
     Post.findOne({ _id: req.params.id })
       .then(() => {
@@ -115,6 +116,7 @@ exports.likePost = (req, res, next) => {
       });
   } else if (req.body.like === -1) {
     delete req.body._userId;
+
     Post.findOne({ _id: req.params.id })
       .then(() => {
         const dislike = {

@@ -1,7 +1,10 @@
 import { useForm } from "react-hook-form";
 import { NavCreatePost } from "../../components/Nav";
+import { ErrorAuth } from "../../components/Error";
 
 function CreatePost() {
+  const token = JSON.parse(localStorage.getItem("token"));
+
   const {
     register,
     handleSubmit,
@@ -11,21 +14,25 @@ function CreatePost() {
 
   const onSubmit = (data) => {
     const token = JSON.parse(localStorage.getItem("token"));
-    const post = new FormData()
-      
-    post.append("post", JSON.stringify({"postMessage": data.postMessage}))
-    post.append("image", data.imageUrl[0])
-  
+    const post = new FormData();
+
+    post.append("post", JSON.stringify({ postMessage: data.postMessage }));
+    post.append("image", data.imageUrl[0]);
+
     fetch("http://localhost:4200/api/posts", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
       },
       body: post,
-      }).then((response) => {
-        response.json()}).then(() => {
-          alert("Post ajouté !")
-      }).catch((error) => {
+    })
+      .then((response) => {
+        response.json();
+      })
+      .then(() => {
+        alert("Post ajouté !");
+      })
+      .catch((error) => {
         console.error("Error:", error);
       });
   };
@@ -52,8 +59,8 @@ function CreatePost() {
     }
   }*/
 
-  return (
-    <div>
+  return token ? (
+    <>
       <header>
         <NavCreatePost />
         <h1>Exprimez-vous</h1>
@@ -85,7 +92,9 @@ function CreatePost() {
           <input value="Valider" className="valid_form" type="submit" />
         </div>
       </form>
-    </div>
+    </>
+  ) : (
+    <ErrorAuth />
   );
 }
 

@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import Loader from "../../components/Loader";
+
 import {
   StyledConnect,
   StyledHeader,
@@ -38,19 +39,18 @@ function Connect() {
   const oneSpecialCharacter = /[*.!@#$%^&(){}[]:;]/.test(password);
   const lengthPassword = password.length >= 12;
 
-
   const testRegister = () => {
     const displayBlock = document.getElementById("frame_confirm_password");
     const addTrue = document.getElementById("confirm_password");
     displayBlock.style.display = "flex";
-    addTrue.setAttribute("required", true)
+    addTrue.setAttribute("required", true);
   };
 
   const testConnect = () => {
     const displayBlock = document.getElementById("frame_confirm_password");
     displayBlock.style.display = "none";
     const addTrue = document.getElementById("confirm_password");
-    addTrue.removeAttribute("required")
+    addTrue.removeAttribute("required");
   };
 
   const onSubmit = (data) => {
@@ -64,9 +64,11 @@ function Connect() {
       .then((response) => response.json())
       .then((data) => {
         const token = data.token;
+        const userId = data.userId;
         localStorage.setItem("token", JSON.stringify(token));
+        localStorage.setItem("userId", JSON.stringify(userId));
         data.error === undefined
-          ? data && (window.location.href = `/accueil?id=${data.userId}`)
+          ? data && (window.location.href = `/accueil`)
           : alert("Veuillez vérifier vos données");
       })
       .catch((error) => {
@@ -84,16 +86,16 @@ function Connect() {
     <Loader />
   ) : (
     <StyledConnect>
-    <StyledHeader>
-      <StyledPrimaryTitle>
-        <StyledGroupo>Groupomania</StyledGroupo> Network
-      </StyledPrimaryTitle>
-      <StyledSecondaryTitle>
-        Bienvenue, on vous attendez !
-      </StyledSecondaryTitle>
-    </StyledHeader>
+      <StyledHeader>
+        <StyledPrimaryTitle>
+          <StyledGroupo>Groupomania</StyledGroupo> Network
+        </StyledPrimaryTitle>
+        <StyledSecondaryTitle>
+          Bienvenue, on vous attendez !
+        </StyledSecondaryTitle>
+      </StyledHeader>
 
-      <StyledForm  onSubmit={handleSubmit(onSubmit)}>
+      <StyledForm onSubmit={handleSubmit(onSubmit)}>
         <StyledFrame id="frame_email">
           <StyledLabel htmlFor="email">Email : </StyledLabel>
           <StyledInput
@@ -110,7 +112,7 @@ function Connect() {
           />
         </StyledFrame>
         <StyledError>{errors.email?.message}</StyledError>
-        
+
         <StyledFrame id="frame_password">
           <StyledLabel htmlFor="password">Mot de passe : </StyledLabel>
           <StyledInput
@@ -119,7 +121,7 @@ function Connect() {
             {...register("password", {
               pattern: {
                 value:
-                  /^(?=.{12,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/
+                  /^(?=.{12,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/,
               },
               required: true,
             })}
@@ -141,7 +143,9 @@ function Connect() {
         )}
 
         <StyledFrame id="frame_confirm_password" style={{ display: "none" }}>
-          <StyledLabel htmlFor="confirm_password">Confirme mot de passe : </StyledLabel>
+          <StyledLabel htmlFor="confirm_password">
+            Confirme mot de passe :{" "}
+          </StyledLabel>
           <StyledInput
             id="confirm_password"
             type={displayPassword ? "text" : "password"}
@@ -149,8 +153,8 @@ function Connect() {
               pattern: {
                 value:
                   /^(?=.{12,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/,
-                  message: "● Mot de passe non similaire",
-              }
+                message: "● Mot de passe non similaire",
+              },
             })}
           />
           <StyledButton onClick={() => setDisplayPassword(!displayPassword)}>
@@ -158,13 +162,25 @@ function Connect() {
           </StyledButton>
         </StyledFrame>
 
-        {validPassword ? null : <StyledError>{errors.confirm_password?.message}</StyledError>}
+        {validPassword ? null : (
+          <StyledError>{errors.confirm_password?.message}</StyledError>
+        )}
 
         <StyledSubmits className="valid_form">
-          <StyledOneSubmit value="Connexion" className="connection" type="submit" onClick={testConnect} />
-          <StyledOneSubmit value="Inscription" className="register" type="submit" onClick={testRegister} />
+          <StyledOneSubmit
+            value="Connexion"
+            className="connection"
+            type="submit"
+            onClick={testConnect}
+          />
+          <StyledOneSubmit
+            value="Inscription"
+            className="register"
+            type="submit"
+            onClick={testRegister}
+          />
         </StyledSubmits>
-      </StyledForm >
+      </StyledForm>
       <StyledLastBlock>
         <input type="button" value="Mot de passe oublié ?" />
         <p>

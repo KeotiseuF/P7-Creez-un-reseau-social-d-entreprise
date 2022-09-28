@@ -5,6 +5,9 @@ import Home from "./pages/Home";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Connect from "./pages/Connect";
 import CreatePost from "./pages/CreatePost";
+import { Error } from "./components/Error";
+import ModifyPost from "./pages/ModifyPost";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
@@ -12,8 +15,10 @@ root.render(
     <GlobalStyle />
     <Routes>
       <Route path="/" element={<Connect />} />
-      <Route path="/accueil" element={<Home />} />
-      <Route path="accueil/create_post" element={<CreatePost />} />
+      <Route path={`/accueil`} element={<Home />} />
+      <Route path="/accueil/create_post" element={<CreatePost />} />
+      <Route path="/accueil/modify_post" element={<ModifyPost />} />
+      <Route path="*" element={<Error />} />
     </Routes>
   </BrowserRouter>
 );

@@ -1,19 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
-const url = window.location.search; // Permet d'afficher les paramètres de l'url.
-const params = new URLSearchParams(url); // Cherche dans les paramètres de l'url le premier paramètre.
-const id = params.get("id"); // Renvoie le premier paramètre qui est pour le cas "l'id".
-
 export function NavAccueil() {
+  useEffect(() => {
+    const deconnected = document.getElementById("deconnected");
+    deconnected.addEventListener("click", () => {
+      localStorage.clear();
+    });
+  }, []);
+
   return (
     <nav>
-      <Link to="/">Deconnexion</Link>
-      <Link to={`./create_post?id=${id}`}>Créer un post</Link>
+      <Link to="/" id="deconnected">
+        Deconnexion
+      </Link>
+      <Link to={`./create_post`}>Créer un post</Link>
     </nav>
   );
 }
 
 export function NavCreatePost() {
-  return <Link to={`../accueil?id=${id}`}>Accueil</Link>;
+  return (
+    <nav>
+      <Link to={`../accueil`}>Accueil</Link>
+    </nav>
+  );
 }

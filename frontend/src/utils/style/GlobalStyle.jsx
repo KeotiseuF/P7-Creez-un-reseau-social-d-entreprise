@@ -11,6 +11,11 @@ const StyledGlobalStyle = createGlobalStyle`
         font-family: "Lato";        
         background-color: ${colors.secondary};
     }
+
+    img
+    {
+        width: 250px;
+    }
 `;
 
 function GlobalStyle() {

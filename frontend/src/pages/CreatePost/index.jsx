@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { NavCreatePost } from "../../components/Nav";
+import { NavHome } from "../../components/Nav";
 import { ErrorAuth } from "../../components/Error";
 
 function CreatePost() {
@@ -62,7 +62,7 @@ function CreatePost() {
   return token ? (
     <>
       <header>
-        <NavCreatePost />
+        <NavHome />
         <h1>Exprimez-vous</h1>
       </header>
 

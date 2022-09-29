@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
-export function NavAccueil() {
+export function NavPrincipal() {
   useEffect(() => {
     const deconnected = document.getElementById("deconnected");
     deconnected.addEventListener("click", () => {
@@ -19,7 +19,7 @@ export function NavAccueil() {
   );
 }
 
-export function NavCreatePost() {
+export function NavHome() {
   return (
     <nav>
       <Link to={`../accueil`}>Accueil</Link>

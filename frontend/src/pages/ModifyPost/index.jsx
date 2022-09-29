@@ -1,39 +1,110 @@
 import { ErrorAuth } from "../../components/Error";
-import { NavCreatePost } from "../../components/Nav";
+import { NavHome } from "../../components/Nav";
+import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function ModifyPost() {
-  const token = JSON.parse(localStorage.getItem("token"));
-  const url = window.location.search; // Permet d'afficher les paramètres de l'url.
-  const params = new URLSearchParams(url); // Cherche dans les paramètres de l'url le premier paramètre.
-  const id = params.get("id"); // Renvoie le premier paramètre qui est pour le cas "l'id".
+    const token = JSON.parse(localStorage.getItem("token"));
+    let { id } = useParams();
 
-  fetch(`http://localhost:4200/api/posts/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-    })
-    .then((data) => {
-      console.log(data);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+    const [postMessage, setPostMessage] = useState(" ");
+    const [image, setImage] = useState(" ");
+    const [altImage, setAltImage] = useState(" ");
 
-  return token ? (
-    <>
-      <header>
-        <NavCreatePost />
-        <h1>Modify</h1>
-      </header>
-    </>
-  ) : (
-    <ErrorAuth />
-  );
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        watch,
+    } = useForm({ mode: "onTouched" });
+
+    useEffect(() => {
+        fetch(`http://localhost:4200/api/posts/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+            .then((res) => {
+                if (res.ok) {
+                    return res.json();
+                }
+            })
+            .then((data) => {
+                setPostMessage(data.postMessage);
+                setImage(data.imageUrl);
+                setAltImage(data.imageUrl.split("/images/")[1]);
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+    }, [id, token]);
+
+    const onSubmit = (data) => {
+        console.log(data);
+        const post = new FormData();
+        post.append("post", JSON.stringify({ postMessage: data.postMessage }));
+        post.append("image", data.imageUrl[0]);
+
+        fetch(`http://localhost:4200/api/posts/${id}`, {
+            method: "PUT",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            body: post,
+        })
+            .then((response) => {
+                response.json();
+            })
+            .then(() => {
+                alert("Post modifié !");
+                document.location.href = "http://localhost:3000/accueil";
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+    };
+
+    return token ? (
+        <>
+            <header>
+                <NavHome />
+                <h1>Une modification à faire ?</h1>
+            </header>
+
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="frame_commentaire">
+                    <label htmlFor="postMessage">Commentaire :</label>
+                    <input
+                        name="postMessage"
+                        id="postMessage"
+                        type="text"
+                        value={postMessage}
+                        {...register("postMessage", { required: true })}
+                        onChange={(e) => setPostMessage(e.target.value)}
+                    />
+                </div>
+
+                <img src={image} alt={altImage}></img>
+                <div className="frame_image">
+                    <label htmlFor="image">Veuillez insérer une image:</label>
+                    <input
+                        id="image"
+                        name="image"
+                        type="file"
+                        accept="image/png, image/jpeg, image/jpg,"
+                        {...register("imageUrl")}
+                    />
+                </div>
+
+                <div className="valid_form">
+                    <input value="Valider" id="valid_form" type="submit" />
+                </div>
+            </form>
+        </>
+    ) : (
+        <ErrorAuth />
+    );
 }
 
 export default ModifyPost;

@@ -17,7 +17,7 @@ root.render(
       <Route path="/" element={<Connect />} />
       <Route path={`/accueil`} element={<Home />} />
       <Route path="/accueil/create_post" element={<CreatePost />} />
-      <Route path="/accueil/modify_post" element={<ModifyPost />} />
+      <Route path="/accueil/modify_post/:id" element={<ModifyPost />} />
       <Route path="*" element={<Error />} />
     </Routes>
   </BrowserRouter>

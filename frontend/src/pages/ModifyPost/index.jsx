@@ -1,24 +1,24 @@
-import { ErrorAuth } from "../../components/Error";
-import { NavHome } from "../../components/Nav";
-import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { ErrorAuth } from "../../components/Error"; //Importe une fonction qui gère les erreurs d'authentification.
+import { NavHome } from "../../components/Nav"; // Importe une fonction qui gère des liens de navigation.
+import { useForm } from "react-hook-form"; // Hook qui permet de gérer un formulaire.
+import { useParams } from "react-router-dom"; //  Renvoie un objet de paires clé/valeur des paramètres dynamiques de l'URL
+import React, { useState, useEffect } from "react"; //Importe 2 hook et react va permettre d'inclure le mode strict autour de mes composants.
 
+// Affiche la page pour modifier un post .
 function ModifyPost() {
     const token = JSON.parse(localStorage.getItem("token"));
     let { id } = useParams();
 
-    const [postMessage, setPostMessage] = useState(" ");
+    const [message, setMessage] = useState(" ");
     const [image, setImage] = useState(" ");
     const [altImage, setAltImage] = useState(" ");
 
     const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        watch,
-    } = useForm({ mode: "onTouched" });
+        register, //  Permet d'enregistrer une entrée.
+        handleSubmit, // Reçoit les données du formulaire si la validation du formulaire est réussie.
+    } = useForm({ mode: "onTouched" }); // La validation se déclenchera à événement.
 
+    // Va attendre que le token et l'id soit définit pour récupérer au backend le post à modifier.
     useEffect(() => {
         fetch(`http://localhost:4200/api/posts/${id}`, {
             headers: {
@@ -31,7 +31,7 @@ function ModifyPost() {
                 }
             })
             .then((data) => {
-                setPostMessage(data.postMessage);
+                setMessage(data.postMessage);
                 setImage(data.imageUrl);
                 setAltImage(data.imageUrl.split("/images/")[1]);
             })
@@ -40,33 +40,64 @@ function ModifyPost() {
             });
     }, [id, token]);
 
+    // Envoie les données du formulaire au backend.
     const onSubmit = (data) => {
-        console.log(data);
         const post = new FormData();
-        post.append("post", JSON.stringify({ postMessage: data.postMessage }));
+        post.append(
+            "post",
+            JSON.stringify({
+                postMessage:
+                    data.postMessage === " " ? message : data.postMessage,
+            })
+        );
         post.append("image", data.imageUrl[0]);
+        console.log(data);
+        const postMessage =
+            data.postMessage === " " ? message : data.postMessage;
 
-        fetch(`http://localhost:4200/api/posts/${id}`, {
-            method: "PUT",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-            body: post,
-        })
-            .then((response) => {
-                response.json();
+        // S'il n'y a pas d'image envoie juste le message sinon envoie le message et l'image modifiés.
+        if (data.imageUrl.length === 0) {
+            fetch(`http://localhost:4200/api/posts/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ postMessage }),
             })
-            .then(() => {
-                alert("Post modifié !");
-                document.location.href = "http://localhost:3000/accueil";
+                .then((response) => {
+                    response.json();
+                })
+                .then(() => {
+                    alert("Post modifié !");
+                    document.location.href = "http://localhost:3000/accueil";
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
+        } else {
+            fetch(`http://localhost:4200/api/posts/${id}`, {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                body: post,
             })
-            .catch((error) => {
-                console.error("Error:", error);
-            });
+                .then((response) => {
+                    response.json();
+                })
+                .then(() => {
+                    alert("Post modifié !");
+                    document.location.href = "http://localhost:3000/accueil";
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
+        }
     };
 
     return token ? (
-        <>
+        <React.StrictMode>
             <header>
                 <NavHome />
                 <h1>Une modification à faire ?</h1>
@@ -79,9 +110,9 @@ function ModifyPost() {
                         name="postMessage"
                         id="postMessage"
                         type="text"
-                        value={postMessage}
+                        value={message}
                         {...register("postMessage", { required: true })}
-                        onChange={(e) => setPostMessage(e.target.value)}
+                        onChange={(e) => setMessage(e.target.value)}
                     />
                 </div>
 
@@ -101,7 +132,7 @@ function ModifyPost() {
                     <input value="Valider" id="valid_form" type="submit" />
                 </div>
             </form>
-        </>
+        </React.StrictMode>
     ) : (
         <ErrorAuth />
     );

@@ -19,7 +19,7 @@ const StyledGlobalStyle = createGlobalStyle`
 `;
 
 function GlobalStyle() {
-  return <StyledGlobalStyle />;
+    return <StyledGlobalStyle />;
 }
 
 export default GlobalStyle;

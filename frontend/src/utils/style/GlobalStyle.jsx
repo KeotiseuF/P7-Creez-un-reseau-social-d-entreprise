@@ -17,7 +17,7 @@ const StyledGlobalStyle = createGlobalStyle`
         width: 250px;
     }
 
-    a, .deleted 
+    a, .deleted, #valid_form 
     {
         text-decoration: none;
         color: white;

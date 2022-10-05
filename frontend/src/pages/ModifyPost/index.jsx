@@ -1,8 +1,17 @@
 import { ErrorAuth } from "../../components/Error"; //Importe une fonction qui gère les erreurs d'authentification.
-import { NavHome } from "../../components/Nav"; // Importe une fonction qui gère des liens de navigation.
+import { HeaderCreateModifyPost } from "../../components/Header"; // Importe une fonction qui gère des liens de navigation.
 import { useForm } from "react-hook-form"; // Hook qui permet de gérer un formulaire.
 import { useParams } from "react-router-dom"; //  Renvoie un objet de paires clé/valeur des paramètres dynamiques de l'URL
 import React, { useState, useEffect } from "react"; //Importe 2 hook et react va permettre d'inclure le mode strict autour de mes composants.
+import {
+    StyledInputImg,
+    StyledFrame,
+    StyledLabel,
+    StyledValidForm,
+    StyledInputValidForm,
+    StyledInputMessage,
+    StyledForm,
+} from "../../utils/style/CreateOrModifyPost"; // Importe le style de ma page.
 
 // Affiche la page pour modifier un post .
 function ModifyPost() {
@@ -51,7 +60,7 @@ function ModifyPost() {
             })
         );
         post.append("image", data.imageUrl[0]);
-        console.log(data);
+
         const postMessage =
             data.postMessage === " " ? message : data.postMessage;
 
@@ -98,15 +107,14 @@ function ModifyPost() {
 
     return token ? (
         <React.StrictMode>
-            <header>
-                <NavHome />
-                <h1>Une modification à faire ?</h1>
-            </header>
+            <HeaderCreateModifyPost />
 
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="frame_commentaire">
-                    <label htmlFor="postMessage">Commentaire :</label>
-                    <input
+            <StyledForm onSubmit={handleSubmit(onSubmit)}>
+                <StyledFrame className="frame_commentaire">
+                    <StyledLabel htmlFor="postMessage">
+                        Commentaire :
+                    </StyledLabel>
+                    <StyledInputMessage
                         name="postMessage"
                         id="postMessage"
                         type="text"
@@ -114,24 +122,26 @@ function ModifyPost() {
                         {...register("postMessage", { required: true })}
                         onChange={(e) => setMessage(e.target.value)}
                     />
-                </div>
+                </StyledFrame>
 
                 <img src={image} alt={altImage}></img>
-                <div className="frame_image">
-                    <label htmlFor="image">Veuillez insérer une image:</label>
-                    <input
+                <StyledFrame className="frame_image">
+                    <StyledLabel htmlFor="image">
+                        Veuillez remplaer l'image ci-dessus :
+                    </StyledLabel>
+                    <StyledInputImg
                         id="image"
                         name="image"
                         type="file"
                         accept="image/png, image/jpeg, image/jpg,"
                         {...register("imageUrl")}
                     />
-                </div>
+                </StyledFrame>
 
-                <div className="valid_form">
+                <StyledValidForm className="valid_form">
                     <input value="Valider" id="valid_form" type="submit" />
-                </div>
-            </form>
+                </StyledValidForm>
+            </StyledForm>
         </React.StrictMode>
     ) : (
         <ErrorAuth />

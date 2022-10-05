@@ -1,7 +1,16 @@
 import { useForm } from "react-hook-form"; // Hook qui permet de gérer un formulaire.
-import { NavHome } from "../../components/Nav"; // Importe une fonction qui gère des liens de navigation.
+import { HeaderCreateModifyPost } from "../../components/Header"; // Importe une fonction qui gère le header de la page.
 import { ErrorAuth } from "../../components/Error"; //Importe une fonction qui gère les erreurs d'authentification.
-import React from "react"; // Va permettre d'inclure le mode strict autour de mes composants.
+import React, { useEffect, useState } from "react"; // Va permettre d'inclure le mode strict autour de mes composants.
+import {
+    StyledInputImg,
+    StyledFrame,
+    StyledLabel,
+    StyledValidForm,
+    StyledInputValidForm,
+    StyledInputMessage,
+    StyledForm,
+} from "../../utils/style/CreateOrModifyPost"; // Importe le stylr de ma page.
 
 // Affiche la page pour créer un post .
 function CreatePost() {
@@ -39,40 +48,57 @@ function CreatePost() {
     };
 
     const fileTypes = ["jpg", "jpeg", "png"];
+    const [verifMessage, setVerifMessage] = useState("");
+    const [verifImage, setVerifImage] = useState("");
 
     // Vérifie l'extension des fichiers, une alert intervient s'il ne s'agit pas d'image.
-    function validFileType() {
+    const validFileType = () => {
         const image = document.getElementById("image").value.split(".")[1];
-        const validForm = document.getElementsByClassName("valid_form");
+        const validForm = document.getElementById("valid_form");
         const validation = fileTypes.find((e) => e === image);
 
         if (validation === undefined) {
             alert("Type de fichier invalide");
+            validForm.style.display = "none";
         } else {
-            validForm[1].removeAttribute("disabled");
+            setVerifImage(true);
         }
+    };
+
+    useEffect(() => {
+        const inputValid = document.getElementById("postMessage");
+        inputValid.addEventListener("change", () => {
+            setVerifMessage(true);
+        });
+    }, []);
+
+    if (verifMessage && verifImage) {
+        const validForm = document.getElementById("valid_form");
+        validForm.removeAttribute("disabled");
+        validForm.style.display = "block";
     }
 
     return token ? (
         <React.StrictMode>
-            <header>
-                <NavHome />
-                <h1>Exprimez-vous</h1>
-            </header>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="frame_commentaire">
-                    <label htmlFor="postMessage">Commentaire :</label>
-                    <input
+            <HeaderCreateModifyPost />
+            <StyledForm onSubmit={handleSubmit(onSubmit)}>
+                <StyledFrame className="frame_commentaire">
+                    <StyledLabel htmlFor="postMessage">
+                        Commentaire :
+                    </StyledLabel>
+                    <StyledInputMessage
                         name="postMessage"
                         id="postMessage"
                         type="text"
                         {...register("postMessage", { required: true })}
                     />
-                </div>
+                </StyledFrame>
 
-                <div className="frame_image">
-                    <label htmlFor="image">Veuillez insérer une image:</label>
-                    <input
+                <StyledFrame className="frame_image">
+                    <StyledLabel htmlFor="image">
+                        Veuillez insérer une image :
+                    </StyledLabel>
+                    <StyledInputImg
                         id="image"
                         name="image"
                         type="file"
@@ -80,17 +106,17 @@ function CreatePost() {
                         {...register("imageUrl")}
                         onChange={() => validFileType()}
                     />
-                </div>
+                </StyledFrame>
 
-                <div className="valid_form">
-                    <input
+                <StyledValidForm className="valid_form">
+                    <StyledInputValidForm
                         disabled
                         value="Valider"
-                        className="valid_form"
+                        id="valid_form"
                         type="submit"
                     />
-                </div>
-            </form>
+                </StyledValidForm>
+            </StyledForm>
         </React.StrictMode>
     ) : (
         <ErrorAuth />

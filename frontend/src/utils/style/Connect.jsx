@@ -32,7 +32,7 @@ export const StyledGroupo = styled.span`
 
 export const StyledForm = styled.form`
     margin-top: 50px;
-    background: #fc466b;
+    background: ${colors.form};
     border-radius: 50px 50px 0px 0px;
     box-shadow: 13px 11px 28px 0px rgb(169 89 151 / 69%);
     width: 285px;

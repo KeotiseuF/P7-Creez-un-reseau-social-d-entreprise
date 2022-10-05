@@ -1,6 +1,8 @@
-import { NavPrincipal } from "../../components/Nav"; // Importe une fonction qui gère des liens de navigation.
 import { ErrorAuth } from "../../components/Error"; //Importe une fonction qui gère les erreurs d'authentification.
 import React from "react"; // Va permettre d'inclure le mode strict autour de mes composants.
+import { HeaderHome } from "../../components/Header"; // Importe le composant Header dans ma page.
+import { StyledMain } from "../../utils/style/Home"; // Importe le style de ma page d'accueil (partie static).
+import "../../utils/style/HomeCss/styleHome.css"; // Importe le style de ma page d'accueil (partie dynamique).
 
 // Affiche la page d'accueil.
 function Home() {
@@ -41,6 +43,15 @@ function Home() {
                     return alt;
                 };
 
+                // Regarde la taille de l'image et lui définit l'attribut qui lui est adapté.
+                const lookSizeImg = () => {
+                    if (image.naturalHeight >= image.naturalWidth) {
+                        return "cart__img--portrait";
+                    } else {
+                        return "cart__img";
+                    }
+                };
+
                 const main = document.getElementsByTagName("main");
 
                 const post = document.createElement("div");
@@ -53,12 +64,12 @@ function Home() {
                 post.appendChild(itmImage);
 
                 const image = document.createElement("img");
-
                 image.setAttribute("src", data[i].imageUrl);
+                image.classList.add(lookSizeImg());
                 image.setAttribute("alt", altImage());
                 itmImage.appendChild(image);
 
-                const container = document.createElement("container");
+                const container = document.createElement("div");
                 container.classList.add("container");
                 post.appendChild(container);
 
@@ -67,116 +78,156 @@ function Home() {
                 postMessage.innerHTML = data[i].postMessage;
                 container.appendChild(postMessage);
 
+                const containerCheckbox = document.createElement("div");
+                containerCheckbox.classList.add("container_checkbox");
+                container.appendChild(containerCheckbox);
+
+                const containerLike = document.createElement("div");
+                containerLike.classList.add("container_like");
+                containerCheckbox.appendChild(containerLike);
+
                 const like = document.createElement("input");
                 like.classList.add("like");
+                like.setAttribute("id", `like-${i}`);
                 like.setAttribute("type", "checkbox");
-                container.appendChild(like);
+                containerLike.appendChild(like);
+
+                const heartLike = document.createElement("label");
+                heartLike.classList.add("heart_like");
+                heartLike.setAttribute("for", `like-${i}`);
+                containerLike.appendChild(heartLike);
+
+                const containerDislike = document.createElement("div");
+                containerDislike.classList.add("container_dislike");
+                containerCheckbox.appendChild(containerDislike);
 
                 const dislike = document.createElement("input");
                 dislike.classList.add("dislike");
+                dislike.setAttribute("id", `dislike-${i}`);
                 dislike.setAttribute("type", "checkbox");
-                container.appendChild(dislike);
+                containerDislike.appendChild(dislike);
+
+                const heartDislike = document.createElement("label");
+                heartDislike.classList.add("heart_dislike");
+                heartDislike.setAttribute("for", `dislike-${i}`);
+                containerDislike.appendChild(heartDislike);
 
                 const deleted = document.createElement("button");
                 const id = post.dataset.id;
 
                 // Permet d'afficher les buttons "supprimer" et "modifier" si l'utilisateur est bien le propriétaire des posts.
                 if (userId === data[i].userId) {
+                    const containerButtons = document.createElement("div");
+                    containerButtons.classList.add("container_buttons");
+                    container.appendChild(containerButtons);
+
                     const modified = document.createElement("a");
                     modified.classList.add("modified");
                     modified.setAttribute("href", urlModify(id));
                     modified.innerHTML = "Modifier";
-                    container.appendChild(modified);
+                    containerButtons.appendChild(modified);
 
                     deleted.classList.add("deleted");
                     deleted.innerHTML = "Supprimer";
-                    container.appendChild(deleted);
+                    containerButtons.appendChild(deleted);
                 }
 
                 // Active ou non le bouton "dislike" ou "like" dès l'affichage de la page si l'utilisateur se trouve dans un des tableaux "userLike" ou "userDislike".
                 if (data[i].usersDisliked.find((e) => e === userId)) {
-                    like.setAttribute("disabled", "true");
+                    containerLike.style.display = "none";
                     dislike.setAttribute("checked", "true");
                 } else if (data[i].usersLiked.find((e) => e === userId)) {
-                    dislike.setAttribute("disabled", "true");
+                    containerDislike.style.display = "none";
                     like.setAttribute("checked", "true");
                 }
 
                 // Si "dislike" est sélectionné on envoie au backend le résultat et désactive le bouton "like".
                 dislike.addEventListener("click", () => {
-                    dislike.checked
-                        ? fetch(`http://localhost:4200/api/posts/${id}/like`, {
-                              method: "POST",
-                              headers: {
-                                  "Content-type": "application/json",
-                                  Authorization: `Bearer ${token}`,
-                              },
-                              body: JSON.stringify({ like: -1 }),
-                          })
-                              .then((response) => {
-                                  response.json();
-                              })
-                              .then(() => {
-                                  alert("Post dislike !");
-                              })
-                              .catch((error) => {
-                                  console.error("Error:", error);
-                              }) && like.setAttribute("disabled", "true")
-                        : fetch(`http://localhost:4200/api/posts/${id}/like`, {
-                              method: "POST",
-                              headers: {
-                                  Authorization: `Bearer ${token}`,
-                              },
-                              body: JSON.stringify({ like: 1 }),
-                          })
-                              .then((response) => {
-                                  response.json();
-                              })
-                              .then((data) => {
-                                  alert("Dislike enlevé !");
-                              })
-                              .catch((error) => {
-                                  console.error("Error:", error);
-                              }) && like.removeAttribute("disabled");
+                    if (dislike.checked) {
+                        fetch(`http://localhost:4200/api/posts/${id}/like`, {
+                            method: "POST",
+                            headers: {
+                                "Content-type": "application/json",
+                                Authorization: `Bearer ${token}`,
+                            },
+                            body: JSON.stringify({ like: -1 }),
+                        })
+                            .then((response) => {
+                                response.json();
+                            })
+                            .then(() => {
+                                alert("Post dislike !");
+                            })
+                            .catch((error) => {
+                                console.error("Error:", error);
+                            });
+                        like.setAttribute("disabled", "true");
+                        containerLike.style.display = "none";
+                    } else {
+                        fetch(`http://localhost:4200/api/posts/${id}/like`, {
+                            method: "POST",
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                            body: JSON.stringify({ like: 1 }),
+                        })
+                            .then((response) => {
+                                response.json();
+                            })
+                            .then((data) => {
+                                alert("Dislike enlevé !");
+                            })
+                            .catch((error) => {
+                                console.error("Error:", error);
+                            });
+                        like.removeAttribute("disabled");
+                        containerLike.style.display = "block";
+                    }
                 });
 
                 // Si like est sélectionné on envoie au backend le résultat et désactive le bouton "like".
                 like.addEventListener("click", () => {
                     const id = post.dataset.id;
-                    like.checked
-                        ? fetch(`http://localhost:4200/api/posts/${id}/like`, {
-                              method: "POST",
-                              headers: {
-                                  "Content-type": "application/json",
-                                  Authorization: `Bearer ${token}`,
-                              },
-                              body: JSON.stringify({ like: 1 }),
-                          })
-                              .then((response) => {
-                                  response.json();
-                              })
-                              .then(() => {
-                                  alert("Post like !");
-                              })
-                              .catch((error) => {
-                                  console.error("Error:", error);
-                              }) && dislike.setAttribute("disabled", "true")
-                        : fetch(`http://localhost:4200/api/posts/${id}/like`, {
-                              method: "POST",
-                              headers: {
-                                  Authorization: `Bearer ${token}`,
-                              },
-                              body: JSON.stringify({ like: -1 }),
-                          })
-                              .then((response) => {
-                                  response.json();
-                              })
-                              .then((data) => {
-                                  alert("Like enlevé !");
-                              })
-                              .catch((error) => {
-                                  console.error("Error:", error);
-                              }) && dislike.removeAttribute("disabled");
+                    if (like.checked) {
+                        fetch(`http://localhost:4200/api/posts/${id}/like`, {
+                            method: "POST",
+                            headers: {
+                                "Content-type": "application/json",
+                                Authorization: `Bearer ${token}`,
+                            },
+                            body: JSON.stringify({ like: 1 }),
+                        })
+                            .then((response) => {
+                                response.json();
+                            })
+                            .then(() => {
+                                alert("Post like !");
+                            })
+                            .catch((error) => {
+                                console.error("Error:", error);
+                            });
+                        dislike.setAttribute("disabled", "true");
+                        containerDislike.style.display = "none";
+                    } else {
+                        fetch(`http://localhost:4200/api/posts/${id}/like`, {
+                            method: "POST",
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                            body: JSON.stringify({ like: -1 }),
+                        })
+                            .then((response) => {
+                                response.json();
+                            })
+                            .then((data) => {
+                                alert("Like enlevé !");
+                            })
+                            .catch((error) => {
+                                console.error("Error:", error);
+                            });
+                        dislike.removeAttribute("disabled");
+                        containerDislike.style.display = "block";
+                    }
                 });
 
                 // Lors du clique sur le boutton "supprimer" supprime du backend le post et enlève l'élément du DOM.
@@ -200,7 +251,7 @@ function Home() {
                         .catch((error) => {
                             console.error("Error:", error);
                         });
-                    main[0].removeChild(e.path[2]);
+                    main[0].removeChild(e.path[3]);
                 });
             }
         })
@@ -210,11 +261,8 @@ function Home() {
 
     return token ? (
         <React.StrictMode>
-            <header>
-                <h1>Accueil</h1>
-                <NavPrincipal />
-            </header>
-            <main>{/*Les posts ce situent ici.*/}</main>
+            <HeaderHome />
+            <StyledMain>{/*Les posts ce situent ici.*/}</StyledMain>
         </React.StrictMode>
     ) : (
         <ErrorAuth />

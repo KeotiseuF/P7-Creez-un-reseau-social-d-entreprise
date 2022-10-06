@@ -10,6 +10,22 @@ const StyledGlobalStyle = createGlobalStyle`
     {
         font-family: "Lato";        
         background-color: ${colors.secondary};
+        margin: 0px;
+        @media screen and (min-width: 900px) {
+            display: flex;
+            justify-content: center;
+            background: ${colors.tertiary}
+        }
+    }
+
+    #root
+    {
+        @media screen and (min-width: 900px) {
+            width: 850px;
+            background: ${colors.secondary};
+            position: absolute;
+            min-height: 100%;
+        }
     }
 
     img

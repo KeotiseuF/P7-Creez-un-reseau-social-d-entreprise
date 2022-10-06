@@ -8,9 +8,10 @@ import {
     StyledFrame,
     StyledLabel,
     StyledValidForm,
-    StyledInputValidForm,
     StyledInputMessage,
     StyledForm,
+    StyledImg,
+    StyledInputModify,
 } from "../../utils/style/CreateOrModifyPost"; // Importe le style de ma page.
 
 // Affiche la page pour modifier un post .
@@ -124,10 +125,10 @@ function ModifyPost() {
                     />
                 </StyledFrame>
 
-                <img src={image} alt={altImage}></img>
+                <StyledImg src={image} alt={altImage} />
                 <StyledFrame className="frame_image">
-                    <StyledLabel htmlFor="image">
-                        Veuillez remplaer l'image ci-dessus :
+                    <StyledLabel htmlFor="image" style={{ width: "290px" }}>
+                        Veuillez remplacer l'image ci-dessus :
                     </StyledLabel>
                     <StyledInputImg
                         id="image"
@@ -139,7 +140,11 @@ function ModifyPost() {
                 </StyledFrame>
 
                 <StyledValidForm className="valid_form">
-                    <input value="Valider" id="valid_form" type="submit" />
+                    <StyledInputModify
+                        value="Valider"
+                        id="valid_form"
+                        type="submit"
+                    />
                 </StyledValidForm>
             </StyledForm>
         </React.StrictMode>

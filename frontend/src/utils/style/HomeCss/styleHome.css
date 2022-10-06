@@ -1,8 +1,18 @@
-.post {
-    margin-bottom: 70px;
-    width: 295px;
+/* Affichage tablette */
+@media screen and (min-width: 630px) {
+    .post {
+        width: 43%;
+        margin-bottom: 50px;
+    }
 }
 
+/* Affichage mobile */
+@media screen and (max-width: 630px) {
+    .post {
+        margin-bottom: 70px;
+        width: 82%;
+    }
+}
 .cart__item__img {
     border: #fc466b 10px;
     border-style: ridge ridge groove groove;

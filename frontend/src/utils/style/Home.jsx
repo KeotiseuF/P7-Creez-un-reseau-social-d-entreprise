@@ -22,10 +22,4 @@ export const StyledMain = styled.main`
     display: flex;
     flex-direction: column;
     align-items: center;
-    @media screen and (min-width: 630px) {
-        flex-direction: initial;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        align-items: initial;
-    }
 `;

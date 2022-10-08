@@ -112,11 +112,27 @@ function Home() {
                 heartDislike.setAttribute("for", `dislike-${i}`);
                 containerDislike.appendChild(heartDislike);
 
+                const containerNumberLikesDislikes =
+                    document.createElement("div");
+                containerNumberLikesDislikes.setAttribute(
+                    "id",
+                    "container_number_likes_dislikes"
+                );
+                post.appendChild(containerNumberLikesDislikes);
+
+                const numberLikes = document.createElement("p");
+                numberLikes.innerHTML = `Nombre de ❤️ = ${data[i].likes}`;
+                containerNumberLikesDislikes.appendChild(numberLikes);
+
+                const numberDislikes = document.createElement("p");
+                numberDislikes.innerHTML = `Nombre de 💔 = ${data[i].dislikes}`;
+                containerNumberLikesDislikes.appendChild(numberDislikes);
+
                 const deleted = document.createElement("button");
                 const id = post.dataset.id;
 
                 // Permet d'afficher les buttons "supprimer" et "modifier" si l'utilisateur est bien le propriétaire des posts.
-                if (userId === data[i].userId) {
+                if (userId === data[i].userId || window.name === "admin") {
                     const containerButtons = document.createElement("div");
                     containerButtons.classList.add("container_buttons");
                     container.appendChild(containerButtons);
@@ -142,7 +158,7 @@ function Home() {
                 }
 
                 // Si "dislike" est sélectionné on envoie au backend le résultat et désactive le bouton "like".
-                dislike.addEventListener("click", () => {
+                dislike.addEventListener("click", (e) => {
                     if (dislike.checked) {
                         fetch(`http://localhost:4200/api/posts/${id}/like`, {
                             method: "POST",
@@ -163,6 +179,9 @@ function Home() {
                             });
                         like.setAttribute("disabled", "true");
                         containerLike.style.display = "none";
+                        numberDislikes.innerHTML = `Nombre de 💔 = ${(data[
+                            i
+                        ].dislikes += 1)}`;
                     } else {
                         fetch(`http://localhost:4200/api/posts/${id}/like`, {
                             method: "POST",
@@ -182,6 +201,9 @@ function Home() {
                             });
                         like.removeAttribute("disabled");
                         containerLike.style.display = "block";
+                        numberDislikes.innerHTML = `Nombre de 💔 = ${(data[
+                            i
+                        ].dislikes -= 1)}`;
                     }
                 });
 
@@ -208,6 +230,9 @@ function Home() {
                             });
                         dislike.setAttribute("disabled", "true");
                         containerDislike.style.display = "none";
+                        numberLikes.innerHTML = `Nombre de ❤️ = ${(data[
+                            i
+                        ].likes += 1)}`;
                     } else {
                         fetch(`http://localhost:4200/api/posts/${id}/like`, {
                             method: "POST",
@@ -227,6 +252,9 @@ function Home() {
                             });
                         dislike.removeAttribute("disabled");
                         containerDislike.style.display = "block";
+                        numberLikes.innerHTML = `Nombre de ❤️ = ${(data[
+                            i
+                        ].likes -= 1)}`;
                     }
                 });
 

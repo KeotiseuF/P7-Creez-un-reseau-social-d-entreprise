@@ -5,16 +5,18 @@ const MY_APP_SECRET = process.env.APP_SECRET;
 
 // Vérifie le token de l'utilisateur s'il est valide sinon renvoi une erreur.
 module.exports = (req, res, next) => {
-  try {
-    const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, MY_APP_SECRET);
-    const userId = decodedToken.userId;
+    try {
+        const token = req.headers.authorization.split(" ")[1];
+        const decodedToken = jwt.verify(token, MY_APP_SECRET);
+        const userId = decodedToken.userId;
+        const userRole = decodedToken.userRole;
 
-    req.auth = {
-      userId: userId,
-    };
-    next();
-  } catch (error) {
-    res.status(401).json({ error });
-  }
+        req.auth = {
+            userId: userId,
+            userRole: userRole,
+        };
+        next();
+    } catch (error) {
+        res.status(401).json({ error });
+    }
 };

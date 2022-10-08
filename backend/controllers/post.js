@@ -1,5 +1,6 @@
 const Post = require("../models/Post");
 const fs = require("fs"); // Package qui donne accès aux fonctions qui nous permettent de modifier le système de fichiers et de supprimer les fichiers.
+const User = require("../models/User");
 
 // Crée un nouveau post.
 exports.newPost = (req, res, next) => {
@@ -32,59 +33,79 @@ exports.modifyPost = (req, res, next) => {
         : { ...req.body };
 
     delete postObject._userId;
-    Post.findOne({ _id: req.params.id })
-        .then((post) => {
-            if (post.userId != req.auth.userId) {
-                res.status(403).json({ error });
-            } else {
-                Post.updateOne(
-                    { _id: req.params.id },
-                    { ...postObject, _id: req.params.id }
-                )
-                    .then(() => {
-                        // Lance cette condition si l'image est changé et supprime l'ancienne image du dossier "images" grâce au fs.unlink
-                        if (postObject.imageUrl) {
-                            const filename = post.imageUrl.split("/images/")[1];
-                            fs.unlink(`images/${filename}`, () => {
-                                res.status(201).json({
-                                    message:
-                                        "Détails post et/ou image remplacés !",
-                                });
-                            });
-                        } else {
-                            res.status(201).json({
-                                message: "Détails post remplacés !",
-                            });
-                        }
-                    })
-                    .catch((error) => res.status(401).json({ error }));
-            }
+
+    User.findOne({ _id: req.auth.userId })
+        .then((user) => {
+            Post.findOne({ _id: req.params.id })
+                .then((post) => {
+                    if (
+                        post.userId != req.auth.userId &&
+                        user.role != "admin"
+                    ) {
+                        res.status(403).json({ error });
+                    } else {
+                        Post.updateOne(
+                            { _id: req.params.id },
+                            { ...postObject, _id: req.params.id }
+                        )
+                            .then(() => {
+                                // Lance cette condition si l'image est changé et supprime l'ancienne image du dossier "images" grâce au fs.unlink
+                                if (postObject.imageUrl) {
+                                    const filename =
+                                        post.imageUrl.split("/images/")[1];
+                                    fs.unlink(`images/${filename}`, () => {
+                                        res.status(201).json({
+                                            message:
+                                                "Détails post et/ou image remplacés !",
+                                        });
+                                    });
+                                } else {
+                                    res.status(201).json({
+                                        message: "Détails post remplacés !",
+                                    });
+                                }
+                            })
+                            .catch((error) => res.status(401).json({ error }));
+                    }
+                })
+                .catch((error) => {
+                    res.status(400).json({ error });
+                });
         })
-        .catch((error) => {
-            res.status(400).json({ error });
-        });
+        .catch((err) => res.status(400).json(err));
 };
 
 // Permet de supprimer un post.
 exports.deletePost = (req, res, next) => {
-    Post.findOne({ _id: req.params.id })
-        .then((post) => {
-            if (post.userId != req.auth.userId) {
-                res.status(403).json({ error });
-            } else {
-                const filename = post.imageUrl.split("/images/")[1];
-                fs.unlink(`images/${filename}`, () => {
-                    Post.deleteOne({ _id: req.params.id })
-                        .then(() =>
-                            res.status(200).json({ message: "Post supprimé !" })
-                        )
-                        .catch((error) => res.status(401).json({ error }));
+    User.findOne({ _id: req.auth.userId })
+        .then((user) => {
+            Post.findOne({ _id: req.params.id })
+                .then((post) => {
+                    if (
+                        post.userId != req.auth.userId &&
+                        user.role != "admin"
+                    ) {
+                        res.status(403).json({ error });
+                    } else {
+                        const filename = post.imageUrl.split("/images/")[1];
+                        fs.unlink(`images/${filename}`, () => {
+                            Post.deleteOne({ _id: req.params.id })
+                                .then(() =>
+                                    res
+                                        .status(200)
+                                        .json({ message: "Post supprimé !" })
+                                )
+                                .catch((error) =>
+                                    res.status(401).json({ error })
+                                );
+                        });
+                    }
+                })
+                .catch((error) => {
+                    res.status(400).json({ error });
                 });
-            }
         })
-        .catch((error) => {
-            res.status(400).json({ error });
-        });
+        .catch((err) => res.status(400).json(err));
 };
 
 // Renvoi un post qu'on a sélectionné.

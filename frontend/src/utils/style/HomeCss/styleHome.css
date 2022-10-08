@@ -1,8 +1,8 @@
 /* Affichage tablette */
 @media screen and (min-width: 630px) {
     .post {
-        width: 43%;
-        margin-bottom: 50px;
+        width: 502px;
+        margin-bottom: 70px;
     }
 }
 
@@ -99,4 +99,9 @@
     content: url("https://img.icons8.com/ios-filled/30/FD2D01/--broken-heart.png");
     position: relative;
     right: 25px;
+}
+
+#container_number_likes_dislikes {
+    display: flex;
+    justify-content: space-around;
 }

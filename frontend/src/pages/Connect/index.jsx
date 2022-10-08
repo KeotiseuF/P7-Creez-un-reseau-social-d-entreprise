@@ -93,6 +93,7 @@ function Connect() {
         )
             .then((response) => response.json())
             .then((data) => {
+                window.name = data.userRole;
                 const inputConnect = document.getElementById("inputConnect");
                 const token = data.token;
                 const userId = data.userId;
@@ -184,6 +185,13 @@ function Connect() {
                         )}
                     </StyledListing>
                 )}
+
+                {validPassword ? null : (
+                    <StyledError>
+                        {errors.confirm_password?.message}
+                    </StyledError>
+                )}
+
                 <StyledFrame
                     id="frame_confirm_password"
                     style={{ display: "none" }}>
@@ -200,18 +208,7 @@ function Connect() {
                             },
                         })}
                     />
-                    <StyledDisplayPass
-                        type="button"
-                        onClick={(e) => setDisplayPassword(!displayPassword)}
-                        value={displayPassword ? "Cacher" : "Afficher"}
-                    />
                 </StyledFrame>
-
-                {validPassword ? null : (
-                    <StyledError>
-                        {errors.confirm_password?.message}
-                    </StyledError>
-                )}
 
                 <StyledSubmits className="valid_form">
                     <StyledOneSubmit

@@ -1,15 +1,31 @@
+import {
+    StyledError,
+    StyledImgError,
+    StyledMessageError,
+} from "../../utils/style/Error";
+
 export function Error() {
-  return (
-    <div>
-      <h1>Une erreur est survenue, veuillez verifier l'url.</h1>
-    </div>
-  );
+    return (
+        <StyledError>
+            <StyledImgError
+                src={require("../../assets/error.svg").default}
+                alt="log"
+            />
+            <StyledMessageError>
+                Une erreur est survenue, veuillez verifier l'url.
+            </StyledMessageError>
+        </StyledError>
+    );
 }
 
 export function ErrorAuth() {
-  return (
-    <div>
-      <h1>Veuillez-vous authentifier.</h1>
-    </div>
-  );
+    return (
+        <StyledError>
+            <StyledImgError
+                src={require("../../assets/error.svg").default}
+                alt="log"
+            />
+            <StyledMessageError>Veuillez-vous authentifier.</StyledMessageError>
+        </StyledError>
+    );
 }

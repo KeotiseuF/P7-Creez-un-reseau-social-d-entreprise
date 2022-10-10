@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { StyledNavHome } from "../../utils/style/Home";
+
+// Liens de déconnexion et de création de post.
 export function NavPrincipal() {
     useEffect(() => {
         const deconnected = document.getElementById("deconnected");
@@ -12,13 +14,14 @@ export function NavPrincipal() {
     return (
         <StyledNavHome>
             <Link to="/" id="deconnected">
-                Deconnexion
+                Déconnexion
             </Link>
             <Link to={`./create_post`}>Créer un post</Link>
         </StyledNavHome>
     );
 }
 
+// Lien vers la page d'accueil.
 export function NavHome() {
     return (
         <nav>

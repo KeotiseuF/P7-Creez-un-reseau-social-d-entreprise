@@ -186,12 +186,6 @@ function Connect() {
                     </StyledListing>
                 )}
 
-                {validPassword ? null : (
-                    <StyledError>
-                        {errors.confirm_password?.message}
-                    </StyledError>
-                )}
-
                 <StyledFrame
                     id="frame_confirm_password"
                     style={{ display: "none" }}>
@@ -209,6 +203,12 @@ function Connect() {
                         })}
                     />
                 </StyledFrame>
+
+                {validPassword ? null : (
+                    <StyledError>
+                        {errors.confirm_password?.message}
+                    </StyledError>
+                )}
 
                 <StyledSubmits className="valid_form">
                     <StyledOneSubmit

@@ -9,6 +9,7 @@ function Home() {
     const token = JSON.parse(localStorage.getItem("token"));
     const userId = JSON.parse(localStorage.getItem("userId"));
 
+    // Fournit un lien dynamique, qui a pour paramètre l'id du post à modifier.
     const urlModify = (id) => {
         let url = `accueil/modify_post/${id}`;
         return url;
@@ -279,7 +280,7 @@ function Home() {
                         .catch((error) => {
                             console.error("Error:", error);
                         });
-                    main[0].removeChild(e.path[3]);
+                    main[0].removeChild(post);
                 });
             }
         })

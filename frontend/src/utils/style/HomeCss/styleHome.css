@@ -17,6 +17,9 @@
     border: #fc466b 10px;
     border-style: ridge ridge groove groove;
     box-shadow: 1px 3px 18px 13px black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .cart__img,
@@ -66,11 +69,13 @@
 .heart_like {
     position: relative;
     left: -25px;
+    cursor: pointer;
 }
 
 .heart_dislike {
     position: relative;
     right: -25px;
+    cursor: pointer;
 }
 
 .heart_like:before {

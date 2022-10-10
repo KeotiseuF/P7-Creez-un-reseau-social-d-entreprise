@@ -4,6 +4,7 @@ import {
     StyledMessageError,
 } from "../../utils/style/Error";
 
+// Erreur qui s'affiche lorsque l'utilisateur se trompe dans l'url.
 export function Error() {
     return (
         <StyledError>
@@ -18,6 +19,7 @@ export function Error() {
     );
 }
 
+// Erreur qui s'affiche lorsque l'utilisateur essaye d'accéder à une page du site alors qu'il n'est pas connecté.
 export function ErrorAuth() {
     return (
         <StyledError>

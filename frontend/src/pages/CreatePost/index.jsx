@@ -10,7 +10,7 @@ import {
     StyledInputValidForm,
     StyledInputMessage,
     StyledForm,
-} from "../../utils/style/CreateOrModifyPost"; // Importe le stylr de ma page.
+} from "../../utils/style/CreateOrModifyPost"; // Importe le style de ma page.
 
 // Affiche la page pour créer un post .
 function CreatePost() {

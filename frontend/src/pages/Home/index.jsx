@@ -211,6 +211,7 @@ function Home() {
                 // Si like est sélectionné on envoie au backend le résultat et désactive le bouton "like".
                 like.addEventListener("click", () => {
                     const id = post.dataset.id;
+
                     if (like.checked) {
                         fetch(`http://localhost:4200/api/posts/${id}/like`, {
                             method: "POST",

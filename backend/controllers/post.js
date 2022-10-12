@@ -126,15 +126,28 @@ exports.getAllPosts = (req, res, next) => {
 exports.likePost = (req, res, next) => {
     if (req.body.like === 1) {
         delete req.body._userId;
+
         Post.findOne({ _id: req.params.id })
-            .then(() => {
-                const like = {
-                    $addToSet: { usersLiked: req.auth.userId }, // L'Opérateur "$addToSet" ajoute l'id de chaque utilisateur qui aime le post dans le tableau "usersLiked".
-                    $inc: { likes: req.body.like }, // L'Opérateur "$inc" incrémente le like (= 1) à la data "like".
-                };
-                Post.updateOne({ _id: req.params.id }, like)
-                    .then(() => res.status(201).json("Like post"))
-                    .catch((error) => res.status(401).json({ error }));
+            .then((post) => {
+                const userLiked = post.usersLiked.find(
+                    (user) => user == req.auth.userId
+                );
+
+                const userDisliked = post.usersDisliked.find(
+                    (user) => user == req.auth.userId
+                );
+
+                if (!userLiked && !userDisliked) {
+                    const like = {
+                        $addToSet: { usersLiked: req.auth.userId }, // L'Opérateur "$addToSet" ajoute l'id de chaque utilisateur qui aime le post dans le tableau "usersLiked".
+                        $inc: { likes: req.body.like }, // L'Opérateur "$inc" incrémente le like (= 1) à la data "like".
+                    };
+                    Post.updateOne({ _id: req.params.id }, like)
+                        .then(() => res.status(201).json("Like post"))
+                        .catch((error) => res.status(401).json({ error }));
+                } else {
+                    res.status(400).json({ error });
+                }
             })
             .catch((error) => {
                 res.status(400).json({ error });
@@ -143,14 +156,26 @@ exports.likePost = (req, res, next) => {
         delete req.body._userId;
 
         Post.findOne({ _id: req.params.id })
-            .then(() => {
-                const dislike = {
-                    $addToSet: { usersDisliked: req.auth.userId },
-                    $inc: { dislikes: 1 },
-                };
-                Post.updateOne({ _id: req.params.id }, dislike)
-                    .then(() => res.status(201).json("Dislike post"))
-                    .catch((error) => res.status(401).json({ error }));
+            .then((post) => {
+                const userDisliked = post.usersDisliked.find(
+                    (user) => user == req.auth.userId
+                );
+
+                const userLiked = post.usersLiked.find(
+                    (user) => user == req.auth.userId
+                );
+
+                if (!userDisliked && !userLiked) {
+                    const dislike = {
+                        $addToSet: { usersDisliked: req.auth.userId },
+                        $inc: { dislikes: 1 },
+                    };
+                    Post.updateOne({ _id: req.params.id }, dislike)
+                        .then(() => res.status(201).json("Dislike post"))
+                        .catch((error) => res.status(401).json({ error }));
+                } else {
+                    res.status(400).json({ error });
+                }
             })
             .catch((error) => {
                 res.status(400).json({ error });
@@ -163,6 +188,10 @@ exports.likePost = (req, res, next) => {
                     (id) => id == req.auth.userId
                 );
 
+                const idLikes = post.usersLiked.find(
+                    (id) => id == req.auth.userId
+                );
+
                 if (idDislikes) {
                     const dislike = {
                         $pull: { usersDisliked: req.auth.userId },
@@ -171,7 +200,7 @@ exports.likePost = (req, res, next) => {
                     Post.updateOne({ _id: req.params.id }, dislike)
                         .then(() => res.status(201).json("Dislike enlevé"))
                         .catch((error) => res.status(401).json({ error }));
-                } else {
+                } else if (idLikes) {
                     const like = {
                         $pull: { usersLiked: req.auth.userId },
                         $inc: { likes: -1 },
@@ -179,6 +208,8 @@ exports.likePost = (req, res, next) => {
                     Post.updateOne({ _id: req.params.id }, like)
                         .then(() => res.status(201).json("Like enlevé"))
                         .catch((error) => res.status(401).json({ error }));
+                } else {
+                    res.status(400).json({ error });
                 }
             })
             .catch((error) => {

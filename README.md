@@ -2,11 +2,11 @@ Règles à suivre pour installer le site.
 
 1 - Installer "Node.js" pour utiliser principalement "npm" qui est le gestionnaire de paquets par défaut de Node.js https://nodejs.org/en/ (prendre la version recommandée).
 
-2 - Cloner le depôt Github dont l'url se trouve dans le 1er livrable (FANCHONNA_Curtis_1_code_15-08-2022).
+2 - Cloner le dépôt Github dont l'url se trouve dans le 1er livrable (FANCHONNA_Curtis_1_code_15-08-2022).
 
 3 - L'ouvrir depuis votre IDE(environnement de développement).
 
-4 - Créer un fichier ".env" dans le dossier "backend" qui contiendra les infos sensibles comme le port ou l'id pour se connecter à la BD (données se trouvent dans le fichier txt). Coller dans ce fichier les lignes suivante :
+4 - Créer un fichier ".env" dans le dossier "backend" qui contiendra les infos sensibles comme le port ou l'id pour se connecter à la BD (données se trouvent dans le fichier txt). Coller dans ce fichier les lignes suivantes :
 
 ID_MANGO_DB=<Le nom de votre base>
 PASSWORD_MANGO_DB=<Votre mot de passe pour accéder à votre base>

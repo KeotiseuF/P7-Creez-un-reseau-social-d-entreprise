@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/P7-Creez-un-reseau-social-d-entreprise/static/css/main.685a9926.css",
+    "main.js": "/P7-Creez-un-reseau-social-d-entreprise/static/js/main.0c680ca0.js",
+    "static/media/error.svg": "/P7-Creez-un-reseau-social-d-entreprise/static/media/error.95eb1258416c53f21081810d1af1cec7.svg",
+    "static/media/icon-left-font.svg": "/P7-Creez-un-reseau-social-d-entreprise/static/media/icon-left-font.ef487d9ecf86bb6f5d52b447378102b9.svg",
+    "static/media/logo.svg": "/P7-Creez-un-reseau-social-d-entreprise/static/media/logo.48827a08276e40ceb341fa88f8a2d4df.svg",
+    "index.html": "/P7-Creez-un-reseau-social-d-entreprise/index.html",
+    "main.685a9926.css.map": "/P7-Creez-un-reseau-social-d-entreprise/static/css/main.685a9926.css.map",
+    "main.0c680ca0.js.map": "/P7-Creez-un-reseau-social-d-entreprise/static/js/main.0c680ca0.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.685a9926.css",
+    "static/js/main.0c680ca0.js"
+  ]
+}
